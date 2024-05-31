@@ -70,7 +70,7 @@ public class CrearCanalController implements Serializable {
    public void crearCanal() {
     try {
             if (usuario.getTipoUsuario().equals("B") ) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Has alcanzado el límite de recetas permitidas para tu tipo de cuenta."));
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Los usuarios Básicos no pueden crear canales."));
                 return;
             } else if (usuario.getTipoUsuario().equals("P") && usuario.getCanales().size() >= 3) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error", "Los usuarios premium solo pueden crear un máximo de 3 canales."));

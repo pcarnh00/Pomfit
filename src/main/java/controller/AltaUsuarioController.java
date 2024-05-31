@@ -92,7 +92,7 @@ public class AltaUsuarioController implements Serializable {
             cal.setTime(new Date());
             cal.add(Calendar.MONTH, 1); // Añadir un año a la fecha actual
             usuario.setFechaFin(cal.getTime());
-              FacesContext.getCurrentInstance().getExternalContext().redirect("loginUsuario.xhtml");
+              FacesContext.getCurrentInstance().getExternalContext().redirect("index.xhtml");
             // Insertar el usuario en la base de datos
             usuarioEJB.create(usuario);
             System.out.println("Usuario insertado correctamente en la base de datos");

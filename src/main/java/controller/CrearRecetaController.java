@@ -86,51 +86,52 @@ public void init() {
 
 
 
-  public void insertarReceta() {
+ public void insertarReceta() {
     try {
-            if (receta.getNombre() == null || receta.getNombre().isEmpty() ||
-                receta.getDescripcion() == null || receta.getDescripcion().isEmpty() ||
-                receta.getTiempo() <= 0 || receta.getDificultad() == null) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Por favor, complete todos los campos de la receta."));
-                return;
-            }
-            if (usuario == null) {
-                System.out.println("El objeto usuario es null. No se puede obtener su ID.");
-                return;
-            }
-
-            int numeroRecetas = recetaEJB.findByUsuario(usuario).size();
-            String tipoUsuario = usuario.getTipoUsuario();
-
-            if ((tipoUsuario.equals("B") && numeroRecetas >= LIMITE_RECETAS_BASICO) || (tipoUsuario.equals("P") && numeroRecetas >= LIMITE_RECETAS_PREMIUM)) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Has alcanzado el límite de recetas permitidas para tu tipo de cuenta."));
-                return;
-            }
-
-            if (recetaEJB.existeReceta(receta)) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Ya existe una receta con los mismos atributos."));
-                return;
-            }
-
-            receta.setUsuario(usuario);
-            for (Ingredientes ingrediente : ingredientesSeleccionados) {
-                Ingredientes ingredienteExistente = ingredientesEJB.find(ingrediente.getId());
-                if (ingredienteExistente == null) {
-                    ingredientesEJB.create(ingrediente);
-                } else {
-                    ingrediente = ingredienteExistente;
-                }
-                receta.addIngrediente(ingrediente);
-            }
-            recetaEJB.create(receta);
-
-            FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
-            System.out.println("Receta insertada correctamente.");
-        } catch (Exception e) {
-            System.out.println("Error al insertar receta: " + e.getMessage());
+        if (receta.getNombre() == null || receta.getNombre().isEmpty() ||
+            receta.getDescripcion() == null || receta.getDescripcion().isEmpty() ||
+            receta.getTiempo() <= 0 || receta.getDificultad() == null) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Por favor, complete todos los campos de la receta."));
+            return;
         }
+        if (usuario == null) {
+            System.out.println("El objeto usuario es null. No se puede obtener su ID.");
+            return;
+        }
+
+        int numeroRecetas = recetaEJB.findByUsuario(usuario).size();
+        String tipoUsuario = usuario.getTipoUsuario();
+
+        if ((tipoUsuario.equals("B") && numeroRecetas >= LIMITE_RECETAS_BASICO) || (tipoUsuario.equals("P") && numeroRecetas >= LIMITE_RECETAS_PREMIUM)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Has alcanzado el límite de recetas permitidas para tu tipo de cuenta."));
+            return;
+        }
+
+        if (recetaEJB.existeReceta(receta)) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Ya existe una receta con los mismos atributos."));
+            return;
+        }
+
+        receta.setUsuario(usuario);
+        for (Ingredientes ingrediente : ingredientesSeleccionados) {
+            Ingredientes ingredienteExistente = ingredientesEJB.find(ingrediente.getId());
+            if (ingredienteExistente == null) {
+                ingredientesEJB.create(ingrediente);
+            } else {
+                ingrediente = ingredienteExistente;
+            }
+            receta.addIngrediente(ingrediente);
+        }
+        recetaEJB.create(receta);
+
+        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
+        System.out.println("Receta insertada correctamente.");
+    } catch (Exception e) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al insertar receta: " + e.getMessage()));
+        e.printStackTrace();
+    }
 }
-  
+
      public void agregarIngrediente() {
         if (nuevoIngrediente != null && nuevoIngrediente.getNombre() != null && !nuevoIngrediente.getNombre().isEmpty()) {
             ingredientesSeleccionados.add(nuevoIngrediente);
