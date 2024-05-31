@@ -50,34 +50,47 @@ public class LoginUsuarioController implements Serializable {
     }
 
    public void login() {
-    System.out.println("Intentando iniciar sesión para el usuario: " + usuario.getNombre());
-
-    usuario = usuarioFacade.findByUsername(usuario);
-    Usuario usuarioEncontrado = usuarioFacade.findByUsername(usuario);
-    
-
-    if (usuario != null && (usuario.getTipoUsuario().equals("B") || usuario.getTipoUsuario().equals("P"))) {
-        // Inicio de sesión exitoso, almacenar nombre de usuario en la sesión
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        externalContext.getSessionMap().put("nombreUsuario", usuario.getNombre());
-        externalContext.getSessionMap().put("id_usuario", usuario.getId());
-         externalContext.getSessionMap().put("usuarioSesion", usuarioEncontrado); 
+        System.out.println("Intentando iniciar sesión para el usuario: " + usuario.getNombre());
         
+        if (usuario != null) {
+            Usuario usuarioEncontrado = usuarioFacade.findByUsername(usuario);
 
-        System.out.println("Inicio de sesión exitoso. Redirigiendo a la página principal.");
-        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
-    } else if(usuario != null && usuario.getTipoUsuario().equals("S")){
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        externalContext.getSessionMap().put("nombreUsuario", usuario.getNombre());
-        externalContext.getSessionMap().put("id_usuario", usuario.getId());
-         externalContext.getSessionMap().put("usuarioSesion", usuarioEncontrado); 
-        System.out.println("Inicio de sesión SuperUsuario");
-        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principalSuper.xhtml?faces-redirect=true");
-    }else {
-        System.out.println("Inicio de sesión fallido. Redirigiendo a la página de permisos insuficientes.");
-        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "/public/permisosInsuficientes.xhtml?faces-redirect=true");
+            if (usuarioEncontrado != null) {
+                if (usuarioEncontrado.getTipoUsuario().equals("B") || usuarioEncontrado.getTipoUsuario().equals("P")) {
+                    // Inicio de sesión exitoso, almacenar nombre de usuario en la sesión
+                    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+                    externalContext.getSessionMap().put("nombreUsuario", usuarioEncontrado.getNombre());
+                    externalContext.getSessionMap().put("id_usuario", usuarioEncontrado.getId());
+                    externalContext.getSessionMap().put("usuarioSesion", usuarioEncontrado);
+
+                    System.out.println("Inicio de sesión exitoso. Redirigiendo a la página principal.");
+                    FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                            .handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
+                } else if (usuarioEncontrado.getTipoUsuario().equals("S")) {
+                    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+                    externalContext.getSessionMap().put("nombreUsuario", usuarioEncontrado.getNombre());
+                    externalContext.getSessionMap().put("id_usuario", usuarioEncontrado.getId());
+                    externalContext.getSessionMap().put("usuarioSesion", usuarioEncontrado);
+                    System.out.println("Inicio de sesión SuperUsuario");
+                    FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                            .handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principalSuper.xhtml?faces-redirect=true");
+                } else {
+                    System.out.println("Permisos insuficientes para el usuario: " + usuarioEncontrado.getNombre());
+                    FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                            .handleNavigation(FacesContext.getCurrentInstance(), null, "/public/permisosInsuficientes.xhtml?faces-redirect=true");
+                }
+            } else {
+                System.out.println("Usuario no encontrado. Redirigiendo a la página de permisos insuficientes.");
+                FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                        .handleNavigation(FacesContext.getCurrentInstance(), null, "/public/permisosInsuficientes.xhtml?faces-redirect=true");
+            }
+        } else {
+            System.out.println("Datos de usuario no proporcionados. Redirigiendo a la página de permisos insuficientes.");
+            FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                    .handleNavigation(FacesContext.getCurrentInstance(), null, "/public/permisosInsuficientes.xhtml?faces-redirect=true");
+        }
     }
-   }
+
    
    public void eliminarUsuario(Usuario usuarioAEliminar) {
        System.out.println("Inicio de sesión SuperUsuario"+ usuarioAEliminar.getNombre());

@@ -46,6 +46,8 @@ a:hover, a:visited:hover {
 .logo-img {
     height: 50px;
     width: auto;
+    position: absolute;
+    right: 20px;
 }
 
 .top-button {
@@ -72,6 +74,19 @@ a:hover, a:visited:hover {
     background-color: #c2dfef;
     padding: 20px; /* Aumentamos el relleno */
     margin: 20px 0; /* Aumentamos el margen superior e inferior */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra el texto en el pie de página */
+}
+
+#bottom .footer-content {
+    flex: 1;
+    text-align: center;
+}
+
+.logo-img-bottom {
+    position: absolute;
+    right: 20px; /* Ajusta según sea necesario */
 }
 
 /* Barra lateral izquierda */

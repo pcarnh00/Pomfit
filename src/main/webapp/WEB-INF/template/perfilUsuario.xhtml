@@ -14,13 +14,17 @@
 <h:body>
     <div id="top">
         <h:form>
-            <h:graphicImage name="/images/logo.jpg" styleClass="logo-img"/>
+            <h:graphicImage name="/images/logo_principal.jpg" styleClass="logo-img"/>
             <h:commandButton value="Inicio" action="/private/principal.xhtml" styleClass="top-button"/>
             <h:commandButton value="Crear Receta" action="/private/CrearReceta.xhtml" styleClass="top-button"/>
             <h:commandButton value="Crear Canal" action="/private/CrearCanal.xhtml" styleClass="top-button"/>
                <h:commandButton value="Canales" action="/private/canales.xhtml" styleClass="top-button"/>
                <h:commandButton value="Recetas Favoritas" action="/private/recetasFavoritas.xhtml" styleClass="top-button"/>
             <h:commandButton value="Cerrar Sesión" action="/index.xhtml" styleClass="top-button"/>
+            
+            
+            
+
         </h:form>
     </div>
     <div id="content" class="center_content">
@@ -28,7 +32,7 @@
     </div>
    <div id="bottom">
             <ui:insert name="bottom">
-                <footer>
+                <footer style="text-align: center;">
                     <p> @2024 Pomfit. Todos los derechos reservados. 
                         <a href="#">Términos de servicio</a> | 
                         <a href="#">Política de privacidad</a>
