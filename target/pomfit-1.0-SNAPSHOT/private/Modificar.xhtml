@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Modificar Receta</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
+            <ui:define name="content">
+                <h2>Modificar Receta</h2>
+                <h:form>
+                    <h:panelGrid columns="2">
+                        <h:outputLabel value="Nombre de la Receta:" />
+                        <h:inputText value="#{crearRecetaController.receta.nombre}" />
+                        <h:outputLabel value="Descripción:" />
+                        <h:inputTextarea value="#{crearRecetaController.receta.descripcion}" />
+                        <h:outputLabel value="Tiempo de Preparación (minutos):" />
+                        <h:inputText value="#{crearRecetaController.receta.tiempo}" />
+                        <h:outputLabel value="Dificultad:" />
+                        <h:selectOneMenu value="#{crearRecetaController.receta.dificultad}">
+                            <f:selectItem itemValue="Facil" itemLabel="Fácil" />
+                            <f:selectItem itemValue="Intermedio" itemLabel="Intermedio" />
+                            <f:selectItem itemValue="Dificil" itemLabel="Difícil" />
+                        </h:selectOneMenu>
+                        <h:outputLabel value="Ingredientes:" />
+                        <p:selectManyMenu value="#{crearRecetaController.ingredientesSeleccionados}" showCheckbox="true">
+                            <f:selectItems value="#{crearRecetaController.listaIngredientesDisponibles}" var="ingrediente" itemLabel="#{ingrediente.nombre}" itemValue="#{ingrediente}" />
+                        </p:selectManyMenu>
+                    </h:panelGrid>
+                    <p:commandButton value="Guardar Cambios" action="#{crearRecetaController.modificarReceta()}" />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

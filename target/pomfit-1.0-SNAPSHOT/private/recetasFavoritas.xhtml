@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+    <title>Publicaciones Favoritas</title>
+</h:head>
+<h:body>
+    <ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
+        <ui:define name="content">
+            <h3>Publicaciones Favoritas de Usuario</h3>
+
+            <h:form id="formPublicacionesFavoritas">
+                <p:dataTable value="#{publicacionesFavoritas.publicacionesFavoritas}" var="publicacion">
+                    <p:column headerText="Nombre">
+                        #{publicacion.receta.nombre}
+                    </p:column>
+                    <p:column headerText="Acción">
+                        <p:commandButton value="Ver Receta Completa"
+                                         icon="pi pi-eye"
+                                         actionListener="#{publicacionesFavoritas.verRecetaCompleta(publicacion.receta)}"
+                                         update=":formDialogRecetaCompleta"
+                                         oncomplete="PF('dlgRecetaCompleta').show()">
+                            <f:setPropertyActionListener target="#{publicacionesFavoritas.recetaSeleccionada}" value="#{publicacion.receta}" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <!-- Diálogo para mostrar la receta completa -->
+            <p:dialog header="Receta Completa"
+                      widgetVar="dlgRecetaCompleta"
+                      modal="true"
+                      resizable="true"
+                      draggable="true"
+                      position="center"
+                      appendTo="@(body)"
+                      styleClass="receta-dialog">
+                <h:form id="formDialogRecetaCompleta">
+                    <h:panelGrid columns="2" styleClass="receta-panel">
+                        <h:outputLabel value="Nombre:" />
+                        <h:outputText value="#{publicacionesFavoritas.recetaSeleccionada.nombre}" />
+
+                        <h:outputLabel value="Descripción:" />
+                        <h:outputText value="#{publicacionesFavoritas.recetaSeleccionada.descripcion}" />
+
+                        <h:outputLabel value="Dificultad:" />
+                        <h:outputText value="#{publicacionesFavoritas.recetaSeleccionada.dificultad}" />
+
+                        <h:outputLabel value="Ingredientes:" />
+                        <h:dataTable value="#{publicacionesFavoritas.recetaSeleccionada.ingredientes}" var="ingrediente">
+                            <h:column>
+                                #{ingrediente.nombre}
+                            </h:column>
+                        </h:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

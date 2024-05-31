@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Alta de Usuario</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <p:fieldset legend="Datos Personales">
+                <p:panelGrid columns="2">
+                    <p:outputLabel value="Nombre"/>
+                    <p:inputText value="#{altaUsuarioController.usuario.nombre}"/>
+                    
+                    <p:outputLabel value="correo "/>
+                    <p:inputText value="#{altaUsuarioController.usuario.correo}"/>
+                    
+                    <p:outputLabel value="contraseña"/>
+                    <p:inputText value="#{altaUsuarioController.usuario.contrasena}"/>
+                    
+                    <p:selectOneRadio id="TipoUsuario" value="#{altaUsuarioController.usuario.tipoUsuario}">
+                <f:selectItem itemLabel="Premium" itemValue="P" />
+                <f:selectItem itemLabel="Basico" itemValue="B" />
+                <f:selectItem itemLabel="SuperUsuario" itemValue="S" />
+                  </p:selectOneRadio>
+                    <p:outputLabel value="Fecha inicio"/>
+                    <p:calendar value="#{altaUsuarioController.usuario.fechaInicio}" pattern="dd/MM/yyyy"/>
+                     <p:outputLabel value="Fecha fin"/>
+                     <p:calendar value="#{altaUsuarioController.usuario.fechaFin}" pattern="dd/MM/yyyy"/>
+                </p:panelGrid>
+            </p:fieldset>
+            
+            <p:commandButton value="Guardar" action="#{altaUsuarioController.altaUsuario()}" update="@form" />
+            
+      
+        </h:form>
+    </h:body>
+</html>

@@ -1,0 +1,90 @@
+/* default.css */
+
+/* Estilos generales */
+body {
+    background-color: #ffffff;
+    font-size: 16px; /* Aumentamos el tamaño de la fuente */
+    font-family: Verdana, "Verdana CE", Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;  
+    margin: 20px; /* Aumentamos el margen */
+}
+
+h2 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 2px solid #008080; /* Aumentamos el grosor y cambiamos el color del borde */
+    font-size: 24px; /* Aumentamos el tamaño de la fuente */
+    font-weight: bold;
+    margin: 0; /* Quitamos el margen */
+    padding: 10px 0; /* Aumentamos el relleno */
+    color: #008080; /* Cambio del color del título a un tono azul verdoso */
+}
+
+a:link, a:visited {
+    color: #045491;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover, a:visited:hover {
+    color: #045491;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Contenedor principal */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    grid-gap: 10px; /* Espacio entre los elementos */
+}
+
+/* Estilos para todos los botones */
+button, .button {
+    background-color: #2e8b57; /* Cambio del color de fondo a un tono verde oscuro */
+    color: white;
+    border: 2px solid #2e8b57; /* Aumentamos el grosor del borde */
+    border-radius: 4px;
+    padding: 12px 24px; /* Aumentamos el relleno */
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center; /* Centramos el texto horizontalmente */
+    transition: background-color 0.3s, color 0.3s; /* Transición suave de color de fondo y texto */
+    margin-right: 10px; /* Añadimos margen derecho */
+    margin-left: 10px; /* Añadimos margen izquierdo */
+}
+
+button:hover, .button:hover {
+    background-color: #3ca86e; /* Cambio del color de fondo en hover */
+    border-color: #3ca86e; /* Cambio del color del borde en hover */
+}
+
+/* Estilos específicos para botones que tienen clase .secondary */
+.secondary {
+    background-color: #ffffff; /* Cambio del color de fondo a blanco */
+    color: #2e8b57; /* Cambio del color del texto */
+    border-color: #2e8b57; /* Cambio del color del borde */
+}
+
+.secondary:hover {
+    background-color: #2e8b57; /* Cambio del color de fondo en hover */
+    color: white; /* Cambio del color del texto en hover */
+}
+
+.receta-dialog {
+    width: 60%; /* Ancho del diálogo */
+    min-width: 300px; /* Ancho mínimo */
+    max-width: 800px; /* Ancho máximo */
+}
+
+.receta-panel {
+    width: 100%;
+}
+
+/* Ajuste para pantallas pequeñas */
+@media screen and (max-width: 600px) {
+    .receta-dialog {
+        width: 90%;
+        min-width: unset;
+        max-width: unset;
+    }
+}

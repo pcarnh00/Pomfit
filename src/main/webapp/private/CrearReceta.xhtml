@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
+    <ui:define name="title">
+        Publicar Receta
+    </ui:define>
+    <ui:define name="content">
+        <h:form id="publicarRecetaForm">
+            <p:messages id="messages" showDetail="true" closable="true" />
+            <h:panelGrid columns="2">
+                <h:outputLabel value="Nombre de la Receta:" />
+                <h:inputText value="#{crearRecetaController.receta.nombre}" />
+                <h:outputLabel value="Descripción:" />
+                <h:inputTextarea value="#{crearRecetaController.receta.descripcion}" />
+                <h:outputLabel value="Tiempo de Preparación (minutos):" />
+                <h:inputText value="#{crearRecetaController.receta.tiempo}" />
+                <h:outputLabel value="Dificultad:" />
+                <h:selectOneMenu value="#{crearRecetaController.receta.dificultad}">
+                    <f:selectItem itemValue="Facil" itemLabel="Fácil" />
+                    <f:selectItem itemValue="Intermedio" itemLabel="Intermedio" />
+                    <f:selectItem itemValue="Dificil" itemLabel="Difícil" />
+                </h:selectOneMenu>
+                <h:outputLabel value="Ingredientes:" />
+                <p:selectManyMenu value="#{crearRecetaController.ingredientesSeleccionados}" showCheckbox="true">
+                    <f:selectItems value="#{crearRecetaController.listaIngredientesDisponibles}" var="ingrediente" itemLabel="#{ingrediente.nombre}" itemValue="#{ingrediente}" />
+                </p:selectManyMenu>
+                <h:panelGroup>
+                    <p:commandButton value="Agregar Ingrediente" oncomplete="PF('ingredienteDialog').show()" />
+                </h:panelGroup>
+            </h:panelGrid>
+            <p:commandButton value="Publicar Receta" action="#{crearRecetaController.insertarReceta()}" />
+            <p:commandButton value="Cancelar" action="#{loginUsuarioController.redirigir()}" />
+        </h:form>
+
+        <p:dialog header="Agregar Ingrediente" widgetVar="ingredienteDialog" resizable="false" modal="true" showEffect="fade" hideEffect="fade" styleClass="ingrediente-dialog">
+            <h:form id="ingredienteFormDialog">
+                <h:panelGrid columns="1">
+                    <p:outputLabel value="Introduzca un ingrediente" />
+                    <p:inputText value="#{ingredienteController.ingrediente.nombre}" />
+                    <p:commandButton value="Insertar" action="#{ingredienteController.insertarIngrediente()}" 
+                                     update=":publicarRecetaForm:messages :publicarRecetaForm" />
+                    <p:commandButton value="Cancelar" onclick="PF('ingredienteDialog').hide()" type="button" />
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+</html>

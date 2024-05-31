@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Página Principal</title>
+</h:head>
+
+<h:body>
+    <ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
+        <ui:define name="content">
+            <h2>Bienvenido a la Página Principal</h2>
+            <p>¡Acceso correcto, #{sessionScope.nombreUsuario}, #{sessionScope.id_usuario}!</p>
+
+            <!-- Formulario para agregar una publicación -->
+            <h:form id="formAgregarPublicacion">
+                <h2>Agregar Publicación</h2>
+
+                <!-- Seleccionar Receta -->
+                <h:outputLabel for="receta" value="Receta:" />
+                <p:selectOneMenu id="receta" value="#{publicacionController.recetaSeleccionadaId}" required="true"
+                                 requiredMessage="Por favor, seleccione una receta">
+                    <f:selectItem itemLabel="Seleccionar Receta" noSelectionOption="true" />
+                    <f:selectItems value="#{publicacionController.recetasUsuario}" var="receta"
+                                   itemLabel="#{receta.nombre}" itemValue="#{receta.id}" />
+                </p:selectOneMenu>
+                <p:message for="receta" />
+
+                <!-- Seleccionar Canal -->
+                <h:outputLabel for="canal" value="Canal:" />
+                <p:selectCheckboxMenu id="canal" value="#{publicacionController.selectedCanalesIds}" required="true"
+                                      requiredMessage="Por favor, seleccione al menos un canal">
+                    <f:selectItems value="#{publicacionController.canalesDisponibles}" var="canal"
+                                   itemLabel="#{canal.nombre}" itemValue="#{canal.id}" />
+                </p:selectCheckboxMenu>
+                <p:message for="canal" />
+
+                <!-- Botón para publicar -->
+                <p:commandButton value="Publicar" action="#{publicacionController.agregarPublicacion()}" 
+                                 update="@form :formCanales :formPublicaciones" process="@form" />
+            </h:form>
+
+            <!-- Mostrar las recetas creadas por el usuario -->
+            <h:form id="formRecetas">
+                <p:dataTable var="receta" value="#{crearRecetaController.recetasUsuario}">
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{receta.nombre}" />
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{receta.descripcion}" />
+                    </p:column>
+                    <p:column headerText="Acciones">
+                        <p:commandButton value="Modificar" action="Modificar.xhtml">
+                            <f:param name="id_receta" value="#{receta.id}" />
+                        </p:commandButton>
+                        <p:commandButton value="Eliminar" action="#{crearRecetaController.eliminarReceta(receta)}" 
+                                         update=":formRecetas :formCanales"
+                                         process="@this">
+                            <f:ajax render="@form" execute="@this" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <!-- Mostrar los canales disponibles -->
+            <h:form id="formCanales">
+                 <p:dataTable id="tablaCanales" var="canal" value="#{crearCanalController.canalesDisponibles}">
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{canal.nombre}" />
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{canal.descripcion}" />
+                    </p:column>
+                    <p:column headerText="Acciones">
+                        <!-- Botón Unirse -->
+                        <p:commandButton value="Unirse" action="#{crearCanalController.unirseAlCanal(canal)}" 
+                                         rendered="#{not crearCanalController.estaUnidoAlCanal(canal) and not crearCanalController.esMiCanal(canal)}" 
+                                         update=":formCanales :formPublicaciones"
+                                         process="@this">
+                            <f:ajax render="@form" execute="@this" />
+                        </p:commandButton>
+                        <!-- Botón Salirse -->
+                        <p:commandButton value="Salirse" action="#{crearCanalController.salirseDelCanal(canal)}" 
+                                         rendered="#{crearCanalController.estaUnidoAlCanal(canal) and not crearCanalController.esMiCanal(canal)}" 
+                                         update=":formCanales :formPublicaciones"
+                                         process="@this">
+                            <f:ajax render="@form" execute="@this" />
+                        </p:commandButton>
+
+                        
+                        <!-- Botón Eliminar -->
+                       <p:commandButton value="Eliminar" action="#{crearCanalController.eliminarCanal(canal)}" 
+                                        rendered="#{crearCanalController.esSuperUsuario(canal)}" 
+                 update=":formCanales "
+                  process="@this">
+                            <f:ajax render="@form" execute="@this" />
+    
+</p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <!-- Mostrar publicaciones del canal seleccionado -->
+            <h:form id="formPublicaciones">
+        
+            </h:form>
+
+            <!-- Botones para crear nuevas recetas y canales -->
+            
+            <!-- Botón para ver recetas favoritas -->
+         
+            
+            <h:form>
+                <p:commandButton value="Ver Usuarios" action="listaUsuarios.xhtml" />
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

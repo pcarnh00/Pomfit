@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp">
+<h:head>
+    <title>Canal</title>
+    <style>
+        .auto-resize-textarea {
+            resize: none;
+            overflow: hidden;
+            min-height: 50px;
+            width: 100%;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
+        <ui:define name="content">
+            <h2>Publicaciones del Canal #{canalController.canal.nombre}</h2>
+
+            <!-- Formulario para agregar una publicación -->
+            <h:form id="formAgregarPublicacion">
+                <h2>Agregar Publicación</h2>
+
+                <!-- Seleccionar Receta -->
+                <h:outputLabel for="receta" value="Receta:" />
+                <p:selectOneMenu id="receta" value="#{canalController.recetaSeleccionadaId}" required="true"
+                                 requiredMessage="Por favor, seleccione una receta">
+                    <f:selectItem itemLabel="Seleccionar Receta" noSelectionOption="true" />
+                    <f:selectItems value="#{canalController.recetasUsuario}" var="receta"
+                                   itemLabel="#{receta.nombre}" itemValue="#{receta.id}" />
+                </p:selectOneMenu>
+                <p:message for="receta" />
+
+                <!-- Botón para publicar -->
+                <p:commandButton value="Publicar" action="#{canalController.agregarPublicacion()}" 
+                                 update="formAgregarPublicacion formPublicaciones" process="@form" />
+            </h:form>
+
+            <!-- Mostrar las publicaciones del canal -->
+            <h:form id="formPublicaciones">
+                <p:dataTable var="publicacion" value="#{canalController.publicacionesCanal}">
+                    <p:column headerText="Fecha y Hora">
+                        <h:outputText value="#{publicacion.fechaYHora}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Receta">
+                        <h:outputText value="#{publicacion.receta.nombre}" rendered="#{publicacion.receta != null}" />
+                        <h:outputText value="Sin receta" rendered="#{publicacion.receta == null}" />
+                    </p:column>
+                    <p:column headerText="Usuario">
+                        <h:outputText value="#{publicacion.usuario.nombre}" />
+                    </p:column>
+                    <p:column headerText="Acciones">
+                        <p:commandButton value="Agregar a Favoritos"
+                                         action="#{publicacionController.agregarRecetaAFavoritos(publicacion)}"
+                                         rendered="#{not publicacionController.esRecetaFav(publicacion)}"
+                                         update="formPublicaciones"
+                                         process="@this">
+                            <f:ajax execute="@this" render="formPublicaciones" />
+                        </p:commandButton>
+
+                        <p:commandButton value="Quitar de Favoritos"
+                                         action="#{publicacionController.quitarRecetaFav(publicacion)}"
+                                         rendered="#{publicacionController.esRecetaFav(publicacion)}"
+                                         update="formPublicaciones"
+                                         process="@this">
+                            <f:ajax execute="@this" render="formPublicaciones" />
+                        </p:commandButton>
+
+                        <p:commandButton value="Visualizar Receta Completa" 
+                                         oncomplete="PF('dlgRecetaCompleta').show()" 
+                                         icon="pi pi-eye"
+                                         actionListener="#{canalController.verRecetaCompleta(publicacion.receta)}" 
+                                         update=":formDialogRecetaCompleta" />
+                        
+                        <p:commandButton value="Eliminar publicación"
+                                         action="#{publicacionController.eliminarPublicacion(publicacion)}"
+                                         rendered="#{publicacionController.esPublicacionPropia(publicacion)}"
+                                         update="formPublicaciones"
+                                         process="@this">
+                            <f:ajax execute="@this" render="formPublicaciones" />
+                        </p:commandButton>
+
+                        <!-- Botón para agregar comentario y puntuación -->
+                        <p:commandButton value="Agregar Comentario y Puntuación" 
+                                         oncomplete="PF('dlgComentarioPuntuacion').show();" 
+                                         actionListener="#{puntuacionYComentariosController.prepararComentarioYPuntuacion(publicacion.id)}" 
+                                         update=":formComentarioPuntuacion"/>
+
+                        <!-- Botón para ver comentarios -->
+                        <p:commandButton value="Ver Comentarios" 
+                                         oncomplete="PF('dlgComentarios').show()" 
+                                         icon="pi pi-comments"
+                                         actionListener="#{puntuacionYComentariosController.prepararComentarioYPuntuacion(publicacion.id)}" 
+                                         update=":formComentarios"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+            <!-- Diálogo para mostrar la receta completa -->
+            <p:dialog header="Receta Completa" widgetVar="dlgRecetaCompleta" modal="true" 
+                      id="dialogRecetaCompleta" resizable="false" draggable="false" position="center">
+                <h:form id="formDialogRecetaCompleta">
+                    <h:panelGrid columns="2" style="width:100%">
+                        <h:outputLabel value="Nombre:" />
+                        <h:outputText value="#{canalController.recetaSeleccionada.nombre}" />
+
+                        <h:outputLabel value="Descripcion:" />
+                        <p:inputTextarea value="#{canalController.recetaSeleccionada.descripcion}" 
+                                         styleClass="auto-resize-textarea" readonly="true" />
+
+                        <h:outputLabel value="Dificultad:" />
+                        <h:outputText value="#{canalController.recetaSeleccionada.dificultad}" />
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+
+            <!-- Diálogo para mostrar los comentarios -->
+            <p:dialog header="Comentarios de la Receta" widgetVar="dlgComentarios" modal="true" 
+                      id="dialogComentarios"  fitViewport="true" position="center">
+                <h:form id="formComentarios">
+                    <p:dataTable var="comentario" value="#{puntuacionYComentariosController.comentariosDePublicacion}">
+                        <p:column headerText="Comentario">
+                            <h:outputText value="#{comentario.comentario}" />
+                        </p:column>
+                        <p:column headerText="Puntuación">
+                            <h:outputText value="#{comentario.puntuacion}" />
+                        </p:column>
+                        <p:column headerText="Usuario">
+                            <h:outputText value="#{comentario.usuario.nombre}" />
+                        </p:column>
+                       
+                    </p:dataTable>
+                </h:form>
+            </p:dialog>
+
+            <!-- Diálogo para agregar comentario y puntuación -->
+            <p:dialog header="Agregar Comentario y Puntuación" widgetVar="dlgComentarioPuntuacion"
+                      modal="true" resizable="false" draggable="false" position="center">
+                <h:form id="formComentarioPuntuacion">
+                    <!-- Campos ocultos para pasar los IDs -->
+                    <h:inputHidden id="idPublicacion" value="#{puntuacionYComentariosController.publicacionSeleccionada.id}" />
+                    <h:inputHidden id="idUsuario" value="#{sessionScope.id_usuario}" />
+
+                    <h:outputLabel for="puntuacion" value="Puntuación:" />
+                    <p:inputNumber id="puntuacion" value="#{puntuacionYComentariosController.puntuacion}" 
+                                   required="true" requiredMessage="Por favor, seleccione una puntuación">
+                        <f:validateLongRange minimum="1" maximum="5" />
+                    </p:inputNumber>
+                    <p:message for="puntuacion" />
+
+                    <h:outputLabel for="comentario" value="Comentario:" />
+                    <p:inputTextarea id="comentario" value="#{puntuacionYComentariosController.comentario}" 
+                                     rows="6" cols="30" required="true" requiredMessage="Por favor, escriba un comentario" />
+                    <p:message for="comentario" />
+
+                    <p:commandButton value="Agregar" 
+                                     action="#{puntuacionYComentariosController.agregarComentarioYPuntuacion()}" 
+                                     oncomplete="PF('dlgComentarioPuntuacion').hide();" 
+                                     update="@form :formPublicaciones"
+                                     process="@form" />
+                </h:form>
+            </p:dialog>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

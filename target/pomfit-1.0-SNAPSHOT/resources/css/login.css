@@ -1,0 +1,100 @@
+/* default.css */
+
+/* Estilos generales */
+
+body {
+    background-color: #ffffff;
+    font-size: 26px; /* Aumentamos el tamaño de la fuente */
+    font-family: Verdana, "Verdana CE", Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;  
+    margin: 0;
+    height: 100vh; /* Ajustamos el alto para ocupar toda la altura de la ventana */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h2 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 2px solid #008080; /* Aumentamos el grosor y cambiamos el color del borde */
+    font-size: 32px; /* Aumentamos el tamaño de la fuente */
+    font-weight: bold;
+    margin: 15px; /* Quitamos el margen */
+    padding: 10px 0; /* Aumentamos el relleno */
+    color: #008080; /* Cambio del color del título a un tono azul verdoso */
+    text-align: center; /* Centramos el texto */
+}
+
+a:link, a:visited {
+    color: #045491;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover, a:visited:hover {
+    color: #045491;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Contenedor central */
+.center-box {
+    width: 70%; /* Ajustamos el ancho del contenedor central */
+    max-width: 800px; /* Establecemos un ancho máximo */
+    padding: 40px; /* Aumentamos el relleno */
+    border: 2px solid #2e8b57; /* Cambiamos el color del borde */
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    text-align: center; /* Centramos el contenido dentro del contenedor */
+}
+
+/* Contenedor de cuadros de entrada y botones */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 20px; /* Aumentamos el espacio entre elementos */
+    background-color: #ffffff; /* Cambiamos el color de fondo */
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* Contenedor de campos de entrada */
+.input-container {
+    display: flex;
+    align-items: center;
+}
+
+/* Botones */
+.login-button, .register-button {
+    background-color: #2e8b57; /* Cambio del color de fondo a verde */
+    color: #ffffff; /* Cambio del color del texto a blanco */
+    border-color: #2e8b57; /* Cambio del color del borde */
+    border-radius: 4px;
+    padding: 14px 28px; /* Aumentamos el relleno */
+    font-weight: bold;
+    cursor: pointer;
+    margin: 0 10px; /* Añadimos espacio entre los botones */
+}
+
+.login-button:hover, .register-button:hover {
+    background-color: #3ca86e; /* Cambio del color de fondo en hover */
+    color: white; /* Cambio del color del texto en hover */
+}
+
+/* Imagen del logo */
+.logo-img {
+    max-width: 250px; /* Reducimos el tamaño de la imagen */
+    height: auto;
+    margin-top: 20px; /* Espacio superior */
+    margin-bottom: 20px; /* Espacio inferior */
+}
+
+/* Estilos para centrar el contenido de la página */
+.page-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+}

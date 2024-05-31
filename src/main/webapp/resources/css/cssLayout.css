@@ -1,0 +1,126 @@
+/* layout.css */
+
+/* Estilos generales */
+body {
+    background-color: #f0f8f4; /* Cambio del color de fondo a un tono verdoso */
+    font-size: 18px; /* Aumentamos más el tamaño de la fuente */
+    font-family: Verdana, "Verdana CE", Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    color: #000000;  
+    margin: 20px; /* Aumentamos el margen */
+}
+
+h1 {
+    font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+    border-bottom: 2px solid #008080; /* Aumentamos el grosor y cambiamos el color del borde */
+    font-size: 28px; /* Aumentamos más el tamaño de la fuente */
+    font-weight: bold;
+    margin: 0; /* Quitamos el margen */
+    padding: 15px 0; /* Aumentamos más el relleno */
+    color: #008080; /* Cambio del color del título a un tono azul verdoso */
+}
+
+a:link, a:visited {
+    color: #045491;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover, a:visited:hover {
+    color: #045491;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Sección superior */
+#top {
+    position: relative;
+    background-color: #2e8b57; /* Cambio del color de fondo a un tono verde oscuro */
+    color: white;
+    padding: 20px; /* Aumentamos el relleno */
+    margin: 0; /* Eliminamos el margen */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-img {
+    height: 50px;
+    width: auto;
+}
+
+.top-button {
+    background-color: #ffffff;
+    color: #2e8b57; /* Cambio del color del botón a un tono verde */
+    border: 2px solid #2e8b57; /* Aumentamos el grosor del borde */
+    border-radius: 4px;
+    padding: 12px 24px; /* Aumentamos el relleno */
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 10px; /* Añadimos margen izquierdo */
+    margin-right: 10px; /* Añadimos margen derecho */
+}
+
+.top-button:hover {
+    background-color: #2e8b57;
+    color: white;
+    cursor: pointer;
+}
+
+/* Sección inferior */
+#bottom {
+    position: relative;
+    background-color: #c2dfef;
+    padding: 20px; /* Aumentamos el relleno */
+    margin: 20px 0; /* Aumentamos el margen superior e inferior */
+}
+
+/* Barra lateral izquierda */
+#left {
+    float: left;
+    background-color: #ece3a5;
+    padding: 20px; /* Aumentamos el relleno */
+    width: 200px; /* Aumentamos el ancho */
+}
+
+/* Barra lateral derecha */
+#right {
+    float: right;
+    background-color: #ece3a5;
+    padding: 20px; /* Aumentamos el relleno */
+    width: 200px; /* Aumentamos el ancho */
+}
+
+/* Contenido central */
+.center_content {
+    position: relative;
+    background-color: #dddddd;
+    padding: 20px; /* Aumentamos el relleno */
+    margin: 0; /* Eliminamos el margen */
+}
+
+/* Contenido izquierdo */
+.left_content {
+    background-color: #dddddd;
+    padding: 20px; /* Aumentamos el relleno */
+    margin-left: 220px; /* Ajustamos el margen izquierdo */
+}
+
+/* Contenido derecho */
+.right_content {
+    background-color: #dddddd;
+    padding: 20px; /* Aumentamos el relleno */
+    margin-right: 220px; /* Ajustamos el margen derecho */
+}
+
+/* Estilos para enlaces en la sección superior */
+#top a:link, #top a:visited {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#top a:hover, #top a:visited:hover {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+}
