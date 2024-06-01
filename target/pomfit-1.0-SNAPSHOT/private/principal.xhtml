@@ -14,7 +14,7 @@
     <ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
         <ui:define name="content">
             <h2>Bienvenido a la Página Principal</h2>
-            <p>¡Acceso correcto, #{sessionScope.nombreUsuario}, #{sessionScope.id_usuario}!</p>
+            <p>¡Acceso correcto, #{sessionScope.nombreUsuario}!</p>
 
          
 
@@ -83,9 +83,7 @@
             
             </h:form>
 
-           <p:commandButton value="Visualizar Perfil" action="Sesion.xhtml">
-                            <f:param name="id_usuario" value="#{sessionScope.id_usuario}" />
-           </p:commandButton>
+           
            
 
         </ui:define>

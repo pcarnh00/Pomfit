@@ -7,11 +7,10 @@
     <h:head>
         <title>Iniciar sesión</title>
         <h:outputStylesheet name="/css/login.css" />
-     
     </h:head>
-   <h:body>
+    <h:body>
         <div class="center-box">
-            <img src="#{resource['images/logo.jpg']}" alt="Logo" class="logo-img" />
+            <h:graphicImage value="#{resource['images/logo.jpg']}" alt="Logo" styleClass="logo-img" />
             <h2>Iniciar sesión</h2>
             <h:form id="loginForm">
                 <div class="grid-container">
@@ -24,13 +23,12 @@
                         <p:password id="password" required="true" value="#{loginUsuarioController.usuario.contrasena}" />
                     </div>
                     <div class="button-container">
-                        <p:commandButton value="Iniciar sesión" action="#{loginUsuarioController.login()}" styleClass="login-button" />
-               <p:commandButton value="Registrarse" action="#{altaUsuarioController.registrarse}" process="@this" ajax="false" immediate="true" styleClass="register-button" />
-
+                        <p:commandButton id="loginButton" value="Iniciar sesión" action="#{loginUsuarioController.login}" styleClass="login-button" />
+                        <p:commandButton id="registerButton" value="Registrarse" action="#{altaUsuarioController.registrarse}" process="@this" ajax="false" styleClass="register-button" />
                     </div>
                 </div>
+                <h:messages />
             </h:form>
-            <h:messages />
         </div>
     </h:body>
 </html>

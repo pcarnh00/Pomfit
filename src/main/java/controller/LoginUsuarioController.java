@@ -1,33 +1,33 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import EJB.UsuarioFacadeLocal;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 import modelo.Usuario;
 
-/**
- *
- * @author pauli
- */
 @Named
 @ViewScoped
 public class LoginUsuarioController implements Serializable {
+    
     @EJB
     private UsuarioFacadeLocal usuarioFacade;
     private Usuario usuario;
     private String nuevoNombre;
+    private String nuevoTipoUsuario;
+    private Usuario usuarioSesion;
+
+    @PostConstruct
+    public void init() {
+        usuario = new Usuario();
+    }
 
     public UsuarioFacadeLocal getUsuarioFacade() {
         return usuarioFacade;
@@ -35,11 +35,6 @@ public class LoginUsuarioController implements Serializable {
 
     public void setUsuarioFacade(UsuarioFacadeLocal usuarioFacade) {
         this.usuarioFacade = usuarioFacade;
-    }
-
-    @PostConstruct
-    public void init(){
-        usuario = new Usuario();
     }
 
     public Usuario getUsuario() {
@@ -50,28 +45,23 @@ public class LoginUsuarioController implements Serializable {
         this.usuario = usuario;
     }
 
-   public void login() {
+    public void login() {
         System.out.println("Intentando iniciar sesión para el usuario: " + usuario.getNombre());
         
         if (usuario != null) {
             Usuario usuarioEncontrado = usuarioFacade.findByUsername(usuario);
 
             if (usuarioEncontrado != null) {
-                if (usuarioEncontrado.getTipoUsuario().equals("B") || usuarioEncontrado.getTipoUsuario().equals("P")) {
-                    // Inicio de sesión exitoso, almacenar nombre de usuario en la sesión
-                    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-                    externalContext.getSessionMap().put("nombreUsuario", usuarioEncontrado.getNombre());
-                    externalContext.getSessionMap().put("id_usuario", usuarioEncontrado.getId());
-                    externalContext.getSessionMap().put("usuarioSesion", usuarioEncontrado);
+                ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+                externalContext.getSessionMap().put("nombreUsuario", usuarioEncontrado.getNombre());
+                externalContext.getSessionMap().put("id_usuario", usuarioEncontrado.getId());
+                externalContext.getSessionMap().put("usuarioSesion", usuarioEncontrado);
 
+                if (usuarioEncontrado.getTipoUsuario().equals("B") || usuarioEncontrado.getTipoUsuario().equals("P")) {
                     System.out.println("Inicio de sesión exitoso. Redirigiendo a la página principal.");
                     FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
                             .handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
                 } else if (usuarioEncontrado.getTipoUsuario().equals("S")) {
-                    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-                    externalContext.getSessionMap().put("nombreUsuario", usuarioEncontrado.getNombre());
-                    externalContext.getSessionMap().put("id_usuario", usuarioEncontrado.getId());
-                    externalContext.getSessionMap().put("usuarioSesion", usuarioEncontrado);
                     System.out.println("Inicio de sesión SuperUsuario");
                     FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
                             .handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principalSuper.xhtml?faces-redirect=true");
@@ -92,34 +82,29 @@ public class LoginUsuarioController implements Serializable {
         }
     }
 
-   
-   public void eliminarUsuario(Usuario usuarioAEliminar) {
-       System.out.println("Inicio de sesión SuperUsuario"+ usuarioAEliminar.getNombre());
-       if (usuarioAEliminar == null) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Usuario a eliminar no especificado."));
-        return;
-    }
-
-    try {
-        Usuario usuario = usuarioFacade.find(usuarioAEliminar.getId());
-        if(usuario.getTipoUsuario().equals("S")){
-           FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pueden eliminar usuarios de tipo SuperUsuario"));
-            return;
-        }else{
-            if (usuario == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El usuario no existe en la base de datos."));
+    public void eliminarUsuario(Usuario usuarioAEliminar) {
+        System.out.println("Inicio de sesión SuperUsuario" + usuarioAEliminar.getNombre());
+        
+        if (usuarioAEliminar == null) {
             return;
         }
 
-        usuarioFacade.remove(usuario);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "El usuario se eliminó correctamente."));
+        try {
+            Usuario usuario = usuarioFacade.find(usuarioAEliminar.getId());
+            if (usuario.getTipoUsuario().equals("S")) {
+                return;
+            } else {
+                if (usuario == null) {
+                    return;
+                }
+
+                usuarioFacade.remove(usuario);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al eliminar usuario: " + e.getMessage());
         }
-    } catch (Exception e) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo eliminar el usuario."));
-        System.out.println("Error al eliminar usuario: " + e.getMessage());
     }
-   }
-   
+
     public String getNuevoNombre() {
         return nuevoNombre;
     }
@@ -127,91 +112,122 @@ public class LoginUsuarioController implements Serializable {
     public void setNuevoNombre(String nuevoNombre) {
         this.nuevoNombre = nuevoNombre;
     }
- public void modificarNombreUsuario() {
-    try {
-        // Obtener el usuario actual desde la sesión o la base de datos
-        Usuario usuarioActual = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioSesion");
-        
-        if (usuarioActual != null) {
-            // Actualizar el nombre del usuario con el nuevo valor
-            //this.nuevoNombre= unNombre;
-            usuarioActual.setNombre(nuevoNombre);
-            
-
-            // Guardar los cambios en la base de datos
-            usuarioFacade.edit(usuarioActual);
-
-            // Refrescar la sesión del usuario si es necesario
-            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioSesion", usuarioActual);
-
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Nombre de usuario modificado correctamente."));
-        } else {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo encontrar al usuario actual."));
-        }
-    } catch (Exception e) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al modificar el nombre de usuario: " + e.getMessage()));
+    
+    public String getNuevoTipo() {
+        return this.nuevoTipoUsuario;
     }
-}
 
+    public void setNuevoTipo(String nuevoTipo) {
+        this.nuevoTipoUsuario = nuevoTipo;
+    }
 
+    public void modificarDatosUsuario(int id) {
+        usuario = usuarioFacade.find(id);
+        
+        if (usuario != null) {
+            boolean updated = false;
+            if (nuevoNombre != null && !nuevoNombre.isEmpty()) {
+                usuario.setNombre(nuevoNombre);
+                updated = true;
+            }
+            if (nuevoTipoUsuario != null && !nuevoTipoUsuario.isEmpty()) {
+                usuario.setTipoUsuario(nuevoTipoUsuario);
+                updated = true;
+            }
+            if (updated) {
+                usuarioFacade.edit(usuario);
+                 ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+    Map<String, Object> sessionMap = externalContext.getSessionMap();
+    Usuario usuario = (Usuario) sessionMap.get("usuarioSesion");
+    usuario.setNombre(nuevoNombre); // suponiendo que nuevoNombre es el nuevo nombre ingresado
+    sessionMap.put("usuarioSesion", usuario);
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioSesion", usuario);
+                FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                        .handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
+            }
+        }
+    }
 
-     
-     public void cargarUsuario() {
-    // Aquí cargarías el usuario desde la base de datos usando algún método de tu servicio
-    // Suponiendo que tienes un servicio llamado usuarioService que contiene un método findById
-    usuario = usuarioFacade.find(this);
-}
+    public void modificarNombreUsuario() {
+        try {
+            Usuario usuarioActual = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioSesion");
+            
+            if (usuarioActual != null) {
+                usuarioActual.setNombre(nuevoNombre);
+                usuarioFacade.edit(usuarioActual);
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioSesion", usuarioActual);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al modificar el nombre de usuario: " + e.getMessage());
+        }
+    }
 
-    // Método para modificar el tipo de usuario
+    public void modificarUsuario() {
+        try {
+            if (usuario != null) {
+                usuario.setNombre(nuevoNombre);
+                usuario.setTipoUsuario(nuevoTipoUsuario);
+                usuarioFacade.edit(usuario);
+                FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                        .handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al modificar el tipo de usuario: " + e.getMessage());
+        }
+    }
+
+    public void cargarUsuario() {
+        usuario = usuarioFacade.find(this);
+    }
+
     public void modificarTipoUsuario() {
         try {
             if (usuario != null) {
                 usuarioFacade.edit(usuario);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Tipo de usuario modificado correctamente."));
-            } else {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo modificar el tipo de usuario. Usuario no válido."));
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al modificar el tipo de usuario: " + e.getMessage()));
+            System.out.println("Error al modificar el tipo de usuario: " + e.getMessage());
         }
     }
 
+    public void redirigir() {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        Usuario usuarioSesion = (Usuario) externalContext.getSessionMap().get("usuarioSesion");
 
-   
-  public void redirigir() {
-    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-    Usuario usuarioSesion = (Usuario) externalContext.getSessionMap().get("usuarioSesion");
-
-    if (usuarioSesion == null) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Usuario de sesión no especificado."));
-        return;
-    }
-
-    try {
-        usuario = usuarioFacade.find(usuarioSesion.getId());
-
-        if (usuario == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El usuario no existe en la base de datos."));
+        if (usuarioSesion == null) {
             return;
         }
 
-        // Redirigir a la página correspondiente
-        if ("S".equals(usuario.getTipoUsuario())) {
-            System.out.println("Redirigiendo a la página principal de superusuario.");
-            FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principalSuper.xhtml?faces-redirect=true");
-        } else {
-            System.out.println("Redirigiendo a la página principal.");
-            FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
-        }
-    } catch (Exception e) {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al redirigir al usuario: " + e.getMessage()));
-        System.out.println("Error al redirigir al usuario: " + e.getMessage());
-    }
-}
+        try {
+            usuario = usuarioFacade.find(usuarioSesion.getId());
 
-    
+            if (usuario == null) {
+                return;
+            }
+
+            if ("S".equals(usuario.getTipoUsuario())) {
+                System.out.println("Redirigiendo a la página principal de superusuario.");
+                FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                        .handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principalSuper.xhtml?faces-redirect=true");
+            } else {
+                System.out.println("Redirigiendo a la página principal.");
+                FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                        .handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al redirigir al usuario: " + e.getMessage());
+        }
+    }
+
     public List<Usuario> getUsuariosRegistrados() {
         return usuarioFacade.findAll();
     }
 
+    public Usuario getUsuarioSesion() {
+        return usuarioSesion;
+    }
+
+    public void setUsuarioSesion(Usuario usuarioSesion) {
+        this.usuarioSesion = usuarioSesion;
+    }
 }
