@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Iniciar sesión</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
+            <!-- Simplemente redirige a la página plantillaUsuario -->
+            <ui:define name="content">
+                <h2>Iniciar sesión</h2>
+                <h:form>
+                    <div>
+                        <p:outputLabel for="nombre" value="Nombre de usuario:"  />
+                        <p:inputText id="nombre" required="true" value="#{loginUsuarioController.usuario.nombre}"/>
+                    </div>
+                    <div>
+                        <p:outputLabel for="password" value="Contraseña:" />
+                        <p:password id="password" required="true" value="#{loginUsuarioController.usuario.contrasena}"/>
+                    </div>
+                    <div>
+                        <p:commandButton value="Iniciar sesión" action="#{loginUsuarioController.login()}" />
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

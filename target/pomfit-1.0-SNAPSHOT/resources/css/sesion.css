@@ -1,0 +1,34 @@
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid green; /* Borde verde */
+}
+
+.avatar img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%; /* Garantiza que la imagen se muestre en forma de círculo */
+}
+
+.info-container {
+    border: 2px solid green; /* Mismo borde verde que el círculo */
+    padding: 10px; /* Espacio alrededor del contenido */
+    margin-top: 10px; /* Espacio entre el círculo y el rectángulo */
+    text-align: left; /* Alineación del texto a la izquierda */
+}
+
+.info-container .info-item {
+    margin: 5px 0; /* Espacio entre elementos <p> */
+}

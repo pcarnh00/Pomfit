@@ -2,7 +2,10 @@ EJB\PuntuacionYComentariosFacade.class
 EJB\MiembroCanalFacade.class
 EJB\AbstractFacade.class
 controller\LoginUsuarioController.class
+controller\publicacionesFavoritas.class
+controller\CanalController.class
 modelo\MiembroCanal.class
+EJB\PublicacionFacade.class
 EJB\PublicacionFacadeLocal.class
 controller\CrearCanalController.class
 controller\publicacionController.class

@@ -27,6 +27,7 @@ public class LoginUsuarioController implements Serializable {
     @EJB
     private UsuarioFacadeLocal usuarioFacade;
     private Usuario usuario;
+    private String nuevoNombre;
 
     public UsuarioFacadeLocal getUsuarioFacade() {
         return usuarioFacade;
@@ -118,6 +119,65 @@ public class LoginUsuarioController implements Serializable {
         System.out.println("Error al eliminar usuario: " + e.getMessage());
     }
    }
+   
+    public String getNuevoNombre() {
+        return nuevoNombre;
+    }
+
+    public void setNuevoNombre(String nuevoNombre) {
+        this.nuevoNombre = nuevoNombre;
+    }
+ public void modificarNombreUsuario() {
+    try {
+        // Obtener el usuario actual desde la sesión o la base de datos
+        Usuario usuarioActual = (Usuario) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("usuarioSesion");
+        
+        if (usuarioActual != null) {
+            // Actualizar el nombre del usuario con el nuevo valor
+            //this.nuevoNombre= unNombre;
+            usuarioActual.setNombre(nuevoNombre);
+            
+
+            // Guardar los cambios en la base de datos
+            usuarioFacade.edit(usuarioActual);
+
+            // Refrescar la sesión del usuario si es necesario
+            FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuarioSesion", usuarioActual);
+
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Nombre de usuario modificado correctamente."));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo encontrar al usuario actual."));
+        }
+    } catch (Exception e) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al modificar el nombre de usuario: " + e.getMessage()));
+    }
+}
+
+
+
+     
+     public void cargarUsuario() {
+    // Aquí cargarías el usuario desde la base de datos usando algún método de tu servicio
+    // Suponiendo que tienes un servicio llamado usuarioService que contiene un método findById
+    usuario = usuarioFacade.find(this);
+}
+
+    // Método para modificar el tipo de usuario
+    public void modificarTipoUsuario() {
+        try {
+            if (usuario != null) {
+                usuarioFacade.edit(usuario);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Tipo de usuario modificado correctamente."));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo modificar el tipo de usuario. Usuario no válido."));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al modificar el tipo de usuario: " + e.getMessage()));
+        }
+    }
+
+
+   
   public void redirigir() {
     ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
     Usuario usuarioSesion = (Usuario) externalContext.getSessionMap().get("usuarioSesion");

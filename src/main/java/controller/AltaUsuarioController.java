@@ -105,5 +105,19 @@ public class AltaUsuarioController implements Serializable {
         }
     }
     
+    public void modificarUsuario(){
+     try {
+            if (usuario != null) {
+                
+                usuarioEJB.edit(usuario);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Nombre de usuario modificado correctamente."));
+            } else {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo modificar el nombre de usuario. Usuario no válido."));
+            }
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al modificar el nombre de usuario: " + e.getMessage()));
+        }
+    }
+
   
 }
