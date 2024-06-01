@@ -212,7 +212,7 @@ public void init() {
         }
     } catch (NumberFormatException e) {
         // Manejar la excepción si no se proporciona un ID válido en los parámetros de la URL
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "ID de receta no válido."));
+       
     } catch (Exception e) {
         // Manejar otras excepciones
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Ocurrió un error al cargar la receta."));

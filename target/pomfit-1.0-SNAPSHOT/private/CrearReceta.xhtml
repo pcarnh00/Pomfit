@@ -35,7 +35,7 @@
                 </h:selectOneMenu>
                 
                 <p:outputLabel value="Ingredientes:" />
-                <p:selectManyMenu value="#{crearRecetaController.ingredientesSeleccionados}" showCheckbox="true">
+                <p:selectManyMenu id="ingredientesMenu" value="#{crearRecetaController.ingredientesSeleccionados}" showCheckbox="true" filter="true" filterMatchMode="contains">
                     <f:selectItems value="#{crearRecetaController.listaIngredientesDisponibles}" var="ingrediente" itemLabel="#{ingrediente.nombre}" itemValue="#{ingrediente}" />
                 </p:selectManyMenu>
                 
@@ -44,7 +44,7 @@
                 </h:panelGroup>
             </h:panelGrid>
             
-            <p:commandButton value="Publicar Receta" action="#{crearRecetaController.insertarReceta()}" update=":publicarRecetaForm:messages :publicarRecetaForm" />
+            <p:commandButton value="Publicar Receta" action="#{crearRecetaController.insertarReceta()}" update="messages" />
             <p:commandButton value="Cancelar" action="#{loginUsuarioController.redirigir()}" />
         </h:form>
 
@@ -54,7 +54,7 @@
                     <p:outputLabel value="Introduzca un ingrediente" />
                     <p:inputText value="#{ingredienteController.ingrediente.nombre}" />
                     <p:commandButton value="Insertar" action="#{ingredienteController.insertarIngrediente()}" 
-                                     update=":publicarRecetaForm:messages :publicarRecetaForm" />
+                                     update="publicarRecetaForm:ingredientesMenu" oncomplete="PF('ingredienteDialog').hide()" />
                     <p:commandButton value="Cancelar" onclick="PF('ingredienteDialog').hide()" type="button" />
                 </h:panelGrid>
             </h:form>

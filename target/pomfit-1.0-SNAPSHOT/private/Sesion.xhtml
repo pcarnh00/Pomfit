@@ -13,39 +13,38 @@
     <title>Información del Usuario</title>
 </h:head>
 <h:body>
-    <h:form>
-        <div class="center-content">
-            <div class="avatar">
-                <h:graphicImage name="images/avatar.png" alt="Avatar" />
-            </div>
-            <h2>Bienvenido, #{sessionScope.usuarioSesion.nombre}!</h2>
-            <div class="info-container">
-                <p>Nombre: #{sessionScope.usuarioSesion.nombre}
-                    <p:commandButton value="Modificar" oncomplete="PF('nombreDialog').show()" />
-                </p>
-                <p>Correo: #{sessionScope.usuarioSesion.correo}</p>
-                <p>Tipo de usuario: #{sessionScope.usuarioSesion.tipoUsuario}
-                    <p:commandButton value="Modificar" oncomplete="PF('tipoUsuarioDialog').show()" />
-                </p>
-                <p>Fecha de inicio: #{sessionScope.usuarioSesion.fechaInicio}</p>
-                <p>Fecha de fin: #{sessionScope.usuarioSesion.fechaFin}</p>
-            </div>
-        </div>
+    <ui:composition template="/WEB-INF/template/platillaPerfil.xhtml">
+        <ui:define name="content">
+            <h:form id="mainForm" >
+                <div class="center-content">
+                    <div class="avatar">
+                        <h:graphicImage name="images/avatar.png" alt="Avatar" />
+                    </div>
+                    <h2>Bienvenido, #{sessionScope.usuarioSesion.nombre}!</h2>
+                    <div class="info-container">
+                        <p>Nombre: #{sessionScope.usuarioSesion.nombre}</p>
+                        <p>Correo: #{sessionScope.usuarioSesion.correo}</p>
+                        <p>Tipo de usuario: #{sessionScope.usuarioSesion.tipoUsuario}</p>
+                        <p>Fecha de inicio: #{sessionScope.usuarioSesion.fechaInicio}</p>
+                        <p>Fecha de fin: #{sessionScope.usuarioSesion.fechaFin}</p>
+                        <p:commandButton value="Modificar" oncomplete="PF('modificarDialog').show()" />
+                    </div>
+                </div>
 
-        <p:dialog header="Modificar Nombre de Usuario" widgetVar="nombreDialog" modal="true" position="center">
-            <h:form>
-                <p:inputText id="nombreUsuarioInput" value="#{modificarPerfilController.nuevoNombre}" />
-                <p:commandButton value="Guardar" action="#{modificarPerfilController.modificarDatosUsuario(sessionScope.usuarioSesion.id)}" oncomplete="PF('nombreDialog').hide(); window.location.href = 'principal.xhtml';" />
-            </h:form>
-        </p:dialog>
+                <p:dialog header="Modificar Datos del Usuario" widgetVar="modificarDialog" modal="true" position="center">
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <h:outputLabel for="nombreUsuarioInput" value="Nombre:" />
+                        <p:inputText id="nombreUsuarioInput" value="#{loginUsuarioController.nuevoNombre}" />
 
-        <!-- Diálogo para modificar el tipo de usuario -->
-        <p:dialog header="Modificar Tipo de Usuario" widgetVar="tipoUsuarioDialog" modal="true" position="center">
-            <h:form>
-                <p:inputText id="tipoUsuarioInput" value="#{modificarPerfilController.nuevoTipoUsuario}" />
-                <p:commandButton value="Guardar" action="#{modificarPerfilController.modificarDatosUsuario(sessionScope.usuarioSesion.id)}" oncomplete="PF('tipoUsuarioDialog').hide(); window.location.href = 'principal.xhtml';" />
+                        <h:outputLabel for="tipoUsuarioInput" value="Tipo de Usuario:" />
+                        <p:inputText id="tipoUsuarioInput" value="#{loginUsuarioController.nuevoTipo}" />
+                    </h:panelGrid>
+                    <p:commandButton value="Guardar" action="#{loginUsuarioController.modificarDatosUsuario(sessionScope.usuarioSesion.id)}" oncomplete="PF('modificarDialog').hide(); window.location.href = 'principal.xhtml';" >
+                        <f:param name="nombreUsuario" value="#{loginUsuarioController.nuevoNombre}" />
+                    </p:commandButton>
+                </p:dialog>
             </h:form>
-        </p:dialog>
-    </h:form>
+        </ui:define>
+    </ui:composition>
 </h:body>
 </html>

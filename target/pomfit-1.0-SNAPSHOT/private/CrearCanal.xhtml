@@ -16,12 +16,12 @@
             <p:messages id="messages" showDetail="true" closable="true"/>
             
             <!-- Campo para el Nombre del Canal -->
-            <h:outputLabel value="Nombre del Canal:" for="nombreCanal" />
-            <h:inputText id="nombreCanal" value="#{crearCanalController.canal.nombre}" />
+            <p:outputLabel value="Nombre del Canal:" for="nombreCanal" />
+            <p:inputText id="nombreCanal" value="#{crearCanalController.canal.nombre}" />
 
             <!-- Campo para la Descripción del Canal -->
-            <h:outputLabel value="Descripción del Canal:" for="descripcionCanal" />
-            <h:inputTextarea id="descripcionCanal" value="#{crearCanalController.canal.descripcion}" rows="5" cols="50" styleClass="descripcion-textarea"/>
+            <p:outputLabel value="Descripción del Canal:" for="descripcionCanal" />
+            <p:inputTextarea id="descripcionCanal" value="#{crearCanalController.canal.descripcion}" rows="5" cols="50" styleClass="descripcion-textarea"/>
 
             <!-- Botón de Crear Canal -->
             <p:commandButton value="Crear Canal" action="#{crearCanalController.crearCanal()}" update=":crearCanalForm:messages :crearCanalForm" />
