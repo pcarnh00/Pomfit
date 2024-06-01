@@ -18,11 +18,12 @@
             <!-- Campo para el Nombre del Canal -->
             <p:outputLabel value="Nombre del Canal:" for="nombreCanal" />
             <p:inputText id="nombreCanal" value="#{crearCanalController.canal.nombre}" />
-
+            
+            
+     
             <!-- Campo para la Descripción del Canal -->
             <p:outputLabel value="Descripción del Canal:" for="descripcionCanal" />
             <p:inputTextarea id="descripcionCanal" value="#{crearCanalController.canal.descripcion}" rows="5" cols="50" styleClass="descripcion-textarea"/>
-
             <!-- Botón de Crear Canal -->
             <p:commandButton value="Crear Canal" action="#{crearCanalController.crearCanal()}" update=":crearCanalForm:messages :crearCanalForm" />
             <p:commandButton value="Cancelar" action="#{loginUsuarioController.redirigir()}" />
@@ -30,3 +31,4 @@
     </ui:define>
 </ui:composition>
 </html>
+

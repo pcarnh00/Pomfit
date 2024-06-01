@@ -49,6 +49,8 @@ public class CanalController implements Serializable {
     @EJB
     private UsuarioFacadeLocal usuarioEJB;
 
+    
+    
     @PostConstruct
     public void init() {
         FacesContext context = FacesContext.getCurrentInstance();
