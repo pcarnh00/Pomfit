@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Modificar Datos del Usuario</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
+            <ui:define name="content">
+                <h2>Modificar Datos del Usuario</h2>
+                <h:form>
+                    <p:fieldset legend="Modificar Datos Personales">
+                        <p:panelGrid columns="2">
+                            <p:outputLabel value="Nombre"/>
+                            <p:inputText value="#{loginUsuarioController.usuario.nombre}"/>
+                            
+                            <p:outputLabel value="Correo"/>
+                            <p:inputText value="#{loginUsuarioController.usuario.correo}"/>
+                            
+                            <p:outputLabel value="Contraseña"/>
+                            <p:password value="#{loginUsuarioController.usuario.contrasena}" feedback="true"/>
+                            
+                            <p:outputLabel value="Tipo de Usuario"/>
+                            <p:selectOneMenu value="#{loginUsuarioController.usuario.tipoUsuario}">
+                                <f:selectItem itemLabel="Premium" itemValue="P" />
+                                <f:selectItem itemLabel="Básico" itemValue="B" />
+                                <f:selectItem itemLabel="SuperUsuario" itemValue="S" />
+                            </p:selectOneMenu>
+                            
+                            <p:outputLabel value="Fecha Inicio"/>
+                            <p:calendar value="#{loginUsuarioController.usuario.fechaInicio}" pattern="dd/MM/yyyy"/>
+                            
+                            <p:outputLabel value="Fecha Fin"/>
+                            <p:calendar value="#{loginUsuarioController.usuario.fechaFin}" pattern="dd/MM/yyyy"/>
+                        </p:panelGrid>
+                    </p:fieldset>
+                    
+                    <p:commandButton value="Guardar Cambios" action="#{loginUsuarioController.modificarUsuario()}" update="@form" />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

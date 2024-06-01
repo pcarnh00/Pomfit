@@ -7,6 +7,7 @@ package controller;
 
 import EJB.UsuarioFacadeLocal;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -153,5 +154,53 @@ public class LoginUsuarioController implements Serializable {
     public List<Usuario> getUsuariosRegistrados() {
         return usuarioFacade.findAll();
     }
+    
+    public void modificarUsuario() {
+    try {
+        if (usuario != null) { // Verificar si el usuario y su ID no son nulos
+            Usuario usuarioExistente = usuarioFacade.find(usuario.getId());
+            if (usuarioExistente != null) {
+                // Actualizar los datos del usuario existente con los datos del usuario modificado
+                usuarioExistente.setNombre(usuario.getNombre());
+                usuarioExistente.setCorreo(usuario.getCorreo());
+                usuarioExistente.setContrasena(usuario.getContrasena());
+                usuarioExistente.setTipoUsuario(usuario.getTipoUsuario());
+                usuarioExistente.setFechaInicio(usuario.getFechaInicio());
+                usuarioExistente.setFechaFin(usuario.getFechaFin());
+
+                // Persistir los cambios
+                usuarioFacade.edit(usuarioExistente);
+
+                FacesContext.getCurrentInstance().getApplication().getNavigationHandler()
+                        .handleNavigation(FacesContext.getCurrentInstance(), null, "/private/principal.xhtml?faces-redirect=true");
+
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Los datos del usuario se han modificado correctamente."));
+                System.out.println("Usuario modificado correctamente.");
+            } else {
+                System.out.println("Usuario no encontrado en la base de datos.");
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Usuario no encontrado en la base de datos."));
+            }
+        } else {
+            System.out.println("El objeto usuario o su ID son nulos. No se puede modificar.");
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "El objeto usuario o su ID son nulos. No se puede modificar."));
+        }
+    } catch (Exception e) {
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error al modificar el usuario: " + e.getMessage()));
+        System.out.println("Error al modificar el usuario: " + e.getMessage());
+    }
+}
+
+public List<Usuario> getUsuariosRegistrados1() {
+    List<Usuario> usuarios = new ArrayList<>();
+    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+    Usuario usuarioSesion = (Usuario) externalContext.getSessionMap().get("usuarioSesion");
+    if (usuarioSesion != null) { // Verificar si el usuario y su ID no son nulos
+        Usuario usuarioBD = usuarioFacade.find(usuarioSesion.getId());
+        if (usuarioBD != null) {
+            usuarios.add(usuarioBD);
+        }
+    }
+    return usuarios;
+}
 
 }

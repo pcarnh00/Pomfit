@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
+    <ui:define name="content">
+        <h:form id="formUsuario">
+            <p:messages id="messages" showDetail="true" closable="true" />
+            <h2>Datos del Usuario</h2>
+            <p:dataTable var="usuario" value="#{loginUsuarioController.usuariosRegistrados1}" emptyMessage="No hay datos disponibles">
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{usuario.nombre}" />
+                </p:column>
+                <p:column headerText="Correo">
+                    <h:outputText value="#{usuario.correo}" />
+                </p:column>
+                <p:column headerText="Tipo de Usuario">
+                    <h:outputText value="#{usuario.tipoUsuario}" />
+                </p:column>
+                <p:column headerText="Fecha Inicio">
+                    <h:outputText value="#{usuario.fechaInicio}" />
+                </p:column>
+                <p:column headerText="Fecha Fin">
+                    <h:outputText value="#{usuario.fechaFin}" />
+                </p:column>
+            </p:dataTable>
+
+            <p:commandButton value="Modificar Datos" action="modificarUsuario.xhtml" />
+            <p:commandButton value="Volver a la página principal" action="principalSuper.xhtml?faces-redirect=true" />
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>
