@@ -72,8 +72,8 @@ public class CrearCanalController implements Serializable {
             if (usuario.getTipoUsuario().equals("B") ) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Los usuarios Básicos no pueden crear canales."));
                 return;
-            } else if (usuario.getTipoUsuario().equals("P") && usuario.getCanales().size() >= 3) {
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error", "Los usuarios premium solo pueden crear un máximo de 3 canales."));
+            } if (usuario.getTipoUsuario().equals("P") && usuario.getCanales().size() >= 5) {
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error", "Los usuarios premium solo pueden crear un máximo de 5 canales."));
                 return;
             }
 
@@ -94,10 +94,11 @@ public class CrearCanalController implements Serializable {
     
     public void unirseAlCanal(Canal canal) {
         try {
-            if (usuario.getTipoUsuario().equals("B") && usuario.getCanales().size()>3) {
+            if (usuario.getTipoUsuario().equals("B") && usuario.getCanales().size() >=3) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error", "Los usuarios básicos solo pueden unirse a 3 canales"));
                 return;
-            } else if (usuario.getTipoUsuario().equals("P") && usuario.getCanales().size() > 10) {
+            } 
+            if (usuario.getTipoUsuario().equals("P") && usuario.getCanales().size() >= 10) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error", "Los usuarios premium solo pueden unirse a un máximo de 10 canales."));
                 return;
             }

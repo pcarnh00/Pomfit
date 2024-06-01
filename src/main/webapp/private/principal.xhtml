@@ -14,7 +14,7 @@
     <ui:composition template="./../WEB-INF/template/perfilUsuario.xhtml">
         <ui:define name="content">
             <h2>Bienvenido a la Página Principal</h2>
-            <p>¡Acceso correcto, #{sessionScope.nombreUsuario}, #{sessionScope.id_usuario}!</p>
+            <p>¡Acceso correcto, #{sessionScope.nombreUsuario}!</p>
 
          
 
@@ -42,6 +42,7 @@
 
             <!-- Mostrar los canales disponibles -->
             <h:form id="formCanales">
+                  <p:messages id="messages" showDetail="true" closable="true"/>
                  <p:dataTable id="tablaCanales" var="canal" value="#{crearCanalController.canalesDisponibles}">
                     <p:column headerText="Nombre">
                         <h:outputText value="#{canal.nombre}" />
@@ -83,6 +84,7 @@
             
             </h:form>
 
+           
            
 
         </ui:define>
